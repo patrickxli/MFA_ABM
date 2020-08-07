@@ -11,9 +11,6 @@ McMaster University
 """
 
 
-import mpmath
-import sympy as sp
-from scipy.optimize import bisect
 from scipy.optimize import fsolve
 from matplotlib import rcParams
 import matplotlib.pyplot as plt
@@ -44,8 +41,7 @@ def AltgPrime(x):
     return y
 
 
-fun_beta = 10  # bench
-# fun_beta = 1 # trail
+fun_beta = 10
 
 
 def eta_1(x):
@@ -117,12 +113,8 @@ for MC_round in range(simulation_rounds):
     # plot parameter
     # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-#    fig_width = 6;
-#    fig_height = 4;
     fig_width = 3
     fig_height = 2
-    # small_fig_width = 3.5;
-    # small_fig_height = 2.5;
     small_fig_width = fig_width
     small_fig_height = fig_height
     full_name = os.path.basename(sys.argv[0])
@@ -151,9 +143,6 @@ for MC_round in range(simulation_rounds):
     """
     # muBarF: probability of switching from type 1 to type 2
     # lambdaBarF: probability of switching from type 2 to type 1
-#    # 2017-11-23
-#    muBarF = 0.6;
-#    lambdaBarF = 0.4;
     muBarF = 0.5
     lambdaBarF = 0.5
     initType1F = 0.2
@@ -225,8 +214,8 @@ for MC_round in range(simulation_rounds):
     issue equity
     """
     varpi = 0.6  # from sensitivity test 2017-03-27
-# varpi = 0.3; # from sensitivity test 2017-03-30, test for equity price
-# bubble
+# varpi = 0.3; # from sensitivity test 2017-03-30, for equity price bubble
+    # scenario
     """
     assume firm has to keep at minimum debt:equity = 6:1. That is debt/capital = 6/(6+1) = 6/7 = 85.7%
     firm's debt-to-capital ratio threshold, Corrado's value = 6
@@ -244,8 +233,6 @@ for MC_round in range(simulation_rounds):
     lambdaBarH: probability of switching from type 2 to type 1
     """
     initType1H = 0.2
-#    muBarH = 0.2;
-#    lambdaBarH = 0.3;
     muBarH = 0.2
     lambdaBarH = 0.3
     """
@@ -271,7 +258,7 @@ for MC_round in range(simulation_rounds):
     assume Household's as investor, proportion of wealth to hold Firms equity
     """
     varphi = 0.5  # from sensitivity test, up to 2017-03-14
-# varphi = 0.3;  # from sensitivity test 2017-03-30, test for equity price
+# varphi = 0.3;  # from sensitivity test 2017-03-30, for equity price
 # bubble
     """
     time-dependent variables
@@ -304,7 +291,7 @@ for MC_round in range(simulation_rounds):
 
     f_epsilon = np.zeros((N, 1))
     f_tilda_eps = np.zeros((N, 1))
-    # v_2_1, add book value and market value of Firm
+
     f_book_value = np.zeros((N, T))
     f_market_value = np.zeros((N, T))
 
@@ -319,7 +306,7 @@ for MC_round in range(simulation_rounds):
     F_E = np.zeros((1, T))  # Firms total equities
     F_V = np.zeros((1, T))  # Firms total net worth
     F_Retained_profit = np.zeros((1, T))  # Firms total retained profit
-    # v_2_1, add book value and market value of Firm
+
     F_book_value = np.zeros((N, T))
     F_market_value = np.zeros((N, T))
     # number of type 1 firms, used in state-dependent transition rate
@@ -452,8 +439,7 @@ for MC_round in range(simulation_rounds):
         bar_agg_V = np.zeros((1, T))  # Firms total net worth
         bar_agg_Retained_profit = np.zeros(
             (1, T))  # Firms total retained profit
-        # v_2_1, add agg book value and market value of MF_Firms, ONLY for
-        # recording data
+
         bar_agg_book_value = np.zeros((2, T))
         bar_agg_market_value = np.zeros((2, T))
         mu = np.zeros((1, T))  # MF Firms mu_f
@@ -567,8 +553,7 @@ for MC_round in range(simulation_rounds):
     f_v[:, 0] = f_k[:, 0] - f_b[:, 0] - f_e[:, 0] * price_e[0, 0]
     new_firm[:, 0] = np.ones(N)
     f_Pi[:, 0] = Pi
-    # v_2_1, add book value and market value of MF_Firms, ONLY for recording
-    # data
+
     f_book_value[:, 0] = f_k[:, 0] - f_b[:, 0]
     f_market_value[:, 0] = price_e[0, 0] * f_e[:, 0]
     """
@@ -594,8 +579,6 @@ for MC_round in range(simulation_rounds):
     F_E[0, 0] = np.sum(f_e[:, 0])  # Firms total equities
     F_V[0, 0] = np.sum(f_v[:, 0])  # Firms total net worth
 
-    # v_2_1, add book value and market value of MF_Firms, ONLY for recording
-    # data
     F_book_value[0, 0] = np.sum(f_book_value[:, 0])
     F_market_value[0, 0] = np.sum(f_market_value[:, 0])
 
@@ -647,8 +630,7 @@ for MC_round in range(simulation_rounds):
         f_retained_profit[c1_x, 0]) / MF_Firms.N[0, 0]  # Firms total retained profit
     MF_Firms.bar_Retained_profit[1, 0] = np.sum(
         f_retained_profit[c2_x, 0]) / MF_Firms.N[1, 0]  # Firms total retained profit
-    # v_2_1, add book value and market value of MF_Firms, ONLY for recording
-    # data
+
     MF_Firms.bar_book_value[0, 0] = np.sum(
         f_book_value[c1_x, 0]) / MF_Firms.N[0, 0]  # Firms book value
     MF_Firms.bar_book_value[1, 0] = np.sum(
@@ -671,8 +653,7 @@ for MC_round in range(simulation_rounds):
     MF_Firms.bar_agg_Retained_profit[0,
                                      0] = F_Retained_profit[0,
                                                             0]  # Firms total retained profit
-    # v_2_1, add book value and market value of MF_Firms, ONLY for recording
-    # data
+
     MF_Firms.bar_agg_book_value[0, 0] = F_book_value[0, 0]  # Firms book value
     MF_Firms.bar_agg_market_value[0,
                                   0] = F_market_value[0,
